@@ -1,0 +1,77 @@
+import json
+import re
+import math
+
+reg = re.compile('[^a-zA-Z\s\']')
+
+data = {}
+with open('datapercent.json') as file:
+    data = json.load(file)
+testfoo = []
+with open('jsons/trainfile2.json') as file:
+    testfoo = json.load(file)
+cuisines = []
+with open('jsons/cuisines.json') as file:
+    cuisines = json.load(file)
+
+testfood = []
+for line in testfoo:
+    temp = []
+    for i in line['ingredients']:
+        temp.append(reg.sub('', i))
+    line = {"id": line['id'], "cuisine": line['cuisine'], "ingredients": temp}
+    testfood.append(line)
+
+def check(list):
+    f = {}
+    for c in cuisines:
+        f[c] = []
+    
+    for ingredient in list:
+        for value in f:
+            tmp = f[value]
+            tmp.append(data[ingredient][value])
+            f[value] = tmp
+    
+    p = {}
+    for value in f:
+        tmp = f[value]
+        n = 0
+        for i in tmp:
+            if i != 0:
+                n+=i
+        av = n / len(tmp)
+        p[value] = av
+
+
+    high_str = ''
+    high = 0.0
+    for value in p:
+        if float(p[value]) > float(high):
+            high = p[value]
+            high_str = value
+
+    return high_str
+
+out = {}
+for recipe in testfood:
+    out[recipe['id']] = check(recipe['ingredients'])
+
+real = {}
+for recipe in testfoo:
+    real[recipe['id']] = recipe['cuisine']
+
+total = len(testfoo)
+success = 0
+for key in out:
+    if out[key] == real[key]:
+        success+=1
+
+perce = success/total *100
+strp = str(perce) + '%'
+print(strp)
+
+with open('guess.json', 'w') as file:
+    json.dump(out, file)
+
+#print(check(['rice', 'diced red onions', 'pork', 'black pepper', 'black beans']))
