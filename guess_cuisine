@@ -2,18 +2,21 @@ import json
 import re
 import math
 
+#regex filter
 reg = re.compile('[^a-zA-Z\s\']')
 
+#load occurrence percentage, trainfile2(FILE TO MAKE GUESSES ON), and list of cuisines
 data = {}
 with open('datapercent.json') as file:
     data = json.load(file)
 testfoo = []
-with open('jsons/trainfile2.json') as file:
+with open('jsons/testfile2a.json') as file:
     testfoo = json.load(file)
 cuisines = []
 with open('jsons/cuisines.json') as file:
     cuisines = json.load(file)
 
+#Would strip the cuisine type from the original file, but was testing with the trainfile, so not needed in practice
 testfood = []
 for line in testfoo:
     temp = []
@@ -22,6 +25,7 @@ for line in testfoo:
     line = {"id": line['id'], "cuisine": line['cuisine'], "ingredients": temp}
     testfood.append(line)
 
+#Of each list of ingredients given, returns the statistically highest match of cuisine type
 def check(list):
     f = {}
     for c in cuisines:
@@ -30,7 +34,8 @@ def check(list):
     for ingredient in list:
         for value in f:
             tmp = f[value]
-            tmp.append(data[ingredient][value])
+            if ingredient in data:
+                tmp.append(data[ingredient][value])
             f[value] = tmp
     
     p = {}
@@ -40,7 +45,10 @@ def check(list):
         for i in tmp:
             if i != 0:
                 n+=i
-        av = n / len(tmp)
+        le = len(tmp)
+        if le == 0:
+            le+=1
+        av = n / le
         p[value] = av
 
 
@@ -53,10 +61,12 @@ def check(list):
 
     return high_str
 
+#Calculate guesses for each list of ingredients
 out = {}
 for recipe in testfood:
     out[recipe['id']] = check(recipe['ingredients'])
 
+#For calculating accuracy, not needed in real scenario
 real = {}
 for recipe in testfoo:
     real[recipe['id']] = recipe['cuisine']
@@ -71,6 +81,7 @@ perce = success/total *100
 strp = str(perce) + '%'
 print(strp)
 
+#Save guesses
 with open('guess.json', 'w') as file:
     json.dump(out, file)
 

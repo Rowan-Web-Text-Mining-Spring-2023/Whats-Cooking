@@ -5,6 +5,7 @@ cuisines = []
 train = []
 num_cuisines = {}
 
+#Loading ingredient list, cuisines, number of each cuisine, and trainfile
 with open('jsons/ingredients.json') as file:
     ingred = json.load(file)
 with open('jsons/cuisines.json') as file:
@@ -19,6 +20,7 @@ map_values_template = {}
 for c in cuisines:
     map_values_template[c] = 0
 
+#For each ingredient, check each recipe and keep track of how many are in line with each cuisine type
 data = {}
 datapercent = {}
 for ingredient in ingred:
@@ -34,6 +36,7 @@ for ingredient in ingred:
     data[ingredient] = map_v
     datapercent[ingredient] = map_p
 
+#Save files, one raw data, other included percentage of occurence
 with open('datapercent.json', 'w') as f:
     json.dump(datapercent, f)
 with open('data.json', 'w') as f:
