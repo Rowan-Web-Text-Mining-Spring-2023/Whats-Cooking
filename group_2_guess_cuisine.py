@@ -7,13 +7,13 @@ reg = re.compile('[^a-zA-Z\s\']')
 
 #load occurrence percentage, trainfile2(FILE TO MAKE GUESSES ON), and list of cuisines
 data = {}
-with open('datapercent.json') as file:
+with open('group_2_datapercent.json') as file:
     data = json.load(file)
 testfoo = []
 with open('jsons/testfile2a.json') as file:
     testfoo = json.load(file)
 cuisines = []
-with open('jsons/cuisines.json') as file:
+with open('jsons/group_2_cuisines.json') as file:
     cuisines = json.load(file)
 
 #Would strip the cuisine type from the original file, but was testing with the trainfile, so not needed in practice
@@ -82,7 +82,7 @@ strp = str(perce) + '%'
 print(strp)
 
 #Save guesses
-with open('guess.json', 'w') as file:
+with open('group_2_guess.json', 'w') as file:
     json.dump(out, file)
 
 #print(check(['rice', 'diced red onions', 'pork', 'black pepper', 'black beans']))

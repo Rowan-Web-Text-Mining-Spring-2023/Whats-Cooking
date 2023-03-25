@@ -21,10 +21,10 @@ for i in food:
             ingredients.append(tmp)
 
 #Save cuisines and ingredients lists
-with open('jsons/cuisines.json', 'w') as f:
+with open('jsons/group_2_cuisines.json', 'w') as f:
     json.dump(cuisines, f)
 
-with open('jsons/ingredients.json', 'w') as f:
+with open('jsons/group_2_ingredients.json', 'w') as f:
     json.dump(ingredients, f)
 
 #Calculate occurences of each cuisine
@@ -36,5 +36,5 @@ for i in food:
     num_cuisines[i['cuisine']] = num_cuisines[i['cuisine']] + 1
 
 #Save occurrences of each cuisine
-with open('jsons/num_cuisines.json', 'w') as f:
+with open('jsons/group_2_num_cuisines.json', 'w') as f:
     json.dump(num_cuisines, f)
